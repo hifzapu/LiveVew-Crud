@@ -62,7 +62,7 @@ defmodule LiveViewPersonWeb.TeamMembers.DetailComponent do
           </dl>
         </div>
       </.sidepeek>
-      </div>
+    </div>
     """
   end
 end

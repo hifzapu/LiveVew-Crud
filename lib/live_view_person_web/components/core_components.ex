@@ -711,14 +711,26 @@ defmodule LiveViewPersonWeb.CoreComponents do
     ~H"""
     <div
       id={@id}
-      phx-mounted={@show && show_sidepeek(@id)}
-      phx-remove={hide_sidepeek(@id)}
-      data-cancel={JS.exec(@on_cancel, "phx-remove")}
-      class="relative z-50 hidden"
+      class={[
+        "relative z-50",
+        if(@show, do: "block", else: "hidden")
+      ]}
+      phx-window-keydown={@on_cancel}
+      phx-key="escape"
     >
-      <div id={"#{@id}-bg"} class="fixed inset-0 transition-opacity" aria-hidden="true" />
       <div
-        class="fixed inset-y-0 right-0 w-full sm:w-[640px] overflow-y-auto bg-white shadow-xl"
+        id={"#{@id}-bg"}
+        class={[
+          "fixed inset-0 transition-opacity pointer-events-none",
+          if(@show, do: "opacity-100", else: "opacity-0")
+        ]}
+        aria-hidden="true"
+      />
+      <div
+        class={[
+          "fixed inset-y-0 right-0 w-full sm:w-[640px] overflow-y-auto bg-white shadow-xl transition-transform duration-300",
+          if(@show, do: "translate-x-0", else: "translate-x-full")
+        ]}
         aria-labelledby={"#{@id}-title"}
         role="dialog"
         aria-modal="true"
@@ -734,7 +746,7 @@ defmodule LiveViewPersonWeb.CoreComponents do
                   <button
                     type="button"
                     class="rounded-md text-zinc-400 hover:text-zinc-500 focus:outline-none"
-                    phx-click={JS.exec("data-cancel", to: "##{@id}")}
+                    phx-click={@on_cancel}
                     aria-label={gettext("close")}
                   >
                     <.icon name="hero-x-mark-solid" class="h-6 w-6" />

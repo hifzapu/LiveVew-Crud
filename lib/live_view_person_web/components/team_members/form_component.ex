@@ -78,6 +78,7 @@ defmodule LiveViewPersonWeb.TeamMembers.FormComponent do
 
   defp save_team_member(socket, :new, team_member_params) do
     team_member_params = Map.put(team_member_params, "created_time", DateTime.utc_now())
+
     case TeamMembers.create_team_member(team_member_params) do
       {:ok, _team_member} ->
         {:noreply,
