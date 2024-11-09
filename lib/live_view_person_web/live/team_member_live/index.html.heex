@@ -1,0 +1,48 @@
+<.header>
+  Listing Team Members
+  <:actions>
+    <.link patch={~p"/team_members/new"}>
+      <.button>New Team Member</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="team_members" rows={@team_members} row_click={&JS.navigate(~p"/team_members/#{&1}")}>
+  <:col :let={team_member} label="Name"><%= team_member.name %></:col>
+  <:action :let={team_member}>
+    <.link patch={~p"/team_members/#{team_member}/edit"}>
+      <.icon name="hero-pencil-square" class="h-4 w-4" />
+    </.link>
+  </:action>
+  <:action :let={team_member}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: team_member.id})}
+      data-confirm="Are you sure?"
+    >
+      <.icon name="hero-trash" class="h-4 w-4 text-red-600" />
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="team_member-modal"
+  show
+  on_cancel={JS.navigate(~p"/team_members")}
+>
+  <.live_component
+    module={LiveViewPersonWeb.TeamMembers.FormComponent}
+    id={@team_member.id || :new}
+    title={@page_title}
+    action={@live_action}
+    team_member={@team_member}
+    navigate={~p"/team_members"}
+  />
+</.modal>
+<.live_component
+  :if={@live_action == :show}
+  module={LiveViewPersonWeb.TeamMembers.DetailComponent}
+  id="team_member_details"
+  live_action={@live_action}
+  team_member={@team_member}
+/>
