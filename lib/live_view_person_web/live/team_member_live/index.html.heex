@@ -7,7 +7,7 @@
   </:actions>
 </.header>
 
-<.table id="team_members" rows={@team_members} row_click={&JS.navigate(~p"/team_members/#{&1}")}>
+<.table id="team_members" rows={@team_members} row_click={&JS.patch(~p"/team_members/#{&1}")}>
   <:col :let={team_member} label="Name"><%= team_member.name %></:col>
   <:action :let={team_member}>
     <.link patch={~p"/team_members/#{team_member}/edit"}>
