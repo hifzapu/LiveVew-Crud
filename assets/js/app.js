@@ -22,8 +22,31 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+let Hooks = {}
+Hooks.HandleOutsideClick = {
+  mounted() {
+    this.handleClick = (event) => {
+      const panel = document.getElementById('my-panel')
+      const teamMembersTable = document.getElementById('team_members')
+      
+      if (panel && 
+          !panel.contains(event.target) && 
+          !teamMembersTable.contains(event.target)) {
+        this.pushEvent("close_panel", {})
+      }
+    }
+
+    document.addEventListener('click', this.handleClick)
+  },
+
+  destroyed() {
+    document.removeEventListener('click', this.handleClick)
+  }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
+  hooks: Hooks,
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken}
 })

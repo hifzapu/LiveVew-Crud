@@ -38,6 +38,10 @@ defmodule LiveViewPersonWeb.TeamMemberLive.Index do
     |> assign(:team_member, nil)
   end
 
+  def handle_event("close_panel", _params, socket) do
+    {:noreply, push_patch(socket, to: ~p"/team_members")}
+  end
+
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     team_member = TeamMembers.get_team_member!(id)
